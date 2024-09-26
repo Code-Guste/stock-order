@@ -7,6 +7,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { typedSx } from "@App/theme/sxTheme";
 import Input from "@Ui/form/inputs/input";
 import MultipleChipArrayInput from "@Ui/form/inputs/multipleChipArrayInput";
+import LoadingSpinner from "@Ui/loadingSpinner";
 import ConfirmationModal from "@Ui/modal/confirmationModal";
 import { useModal } from "@Ui/modal/modal";
 import { toastSuccess } from "@Ui/toast";
@@ -88,6 +89,20 @@ const StockOrderPage = () => {
     }
   };
 
+  if (globalQuoteQuery.isLoading) {
+    return <LoadingSpinner />;
+  }
+
+  if (!globalQuoteQuery.data) {
+    return (
+      <Container sx={styles.container} disableGutters>
+        <Typography variant="body1" sx={styles.message}>
+          Unable to retrieve the global quote data. Please try again later.
+        </Typography>
+      </Container>
+    );
+  }
+
   return (
     <Container sx={styles.container} disableGutters>
       <Typography variant="h1" sx={styles.title}>
@@ -123,7 +138,7 @@ const StockOrderPage = () => {
           <div>
             <Box sx={styles.symbolAndPriceWrapper}>
               <Typography variant="h2" sx={styles.symbolAndPriceContent}>
-                {globalQuoteQuery.data?.["Global Quote"]["01. symbol"]}
+                {globalQuoteQuery.data["Global Quote"]["01. symbol"]}
               </Typography>
               <Typography variant="body1" sx={styles.symbolAndPriceContent}>
                 {price ? `$${price}` : "Price Unavailable"}
